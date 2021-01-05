@@ -9,7 +9,7 @@ cache:
 
 # S: Build Lifecycle
 install:
-  - npm install
+  - yarn
 
 stages:
   - name: deploy
