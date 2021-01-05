@@ -7,12 +7,9 @@ cache:
     - node_modules
   yarn: true
 
-before_install:
-  - npm i ftp
-
 # S: Build Lifecycle
 install:
-  - yarn
+  - npm install
 
 stages:
   - name: deploy
