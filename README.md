@@ -7,14 +7,14 @@ PicGo FTP 上传插件
 名称 | 介绍 | 配置示例
 -|-|-
 域名地址 | 图片网站的域名 | https://imba97.cn
-网站路径 | 图片的路径 | /uploads/{year}/{month}/{fullName}
+网址路径 | 图片的路径 | /uploads/{year}/{month}/{fullName}
 文件路径 | 文件在FTP服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName}
 FTP地址 | 略 | 233.233.233.233
 端口 | 略 | 21
 用户名 | 略 | imba97
 密码 | 略 | imba97
 
-最终返回的地址是 **域名地址** + **网站路径**
+最终返回的地址是 **域名地址** + **网址路径**
 
 ## 路径 Format
 
@@ -34,12 +34,12 @@ ext | 图片后缀名 | png
 
 ## 路径配置示例
 
-**网站路径**和**文件路径**的配置示例
+**网址路径**和**文件路径**的配置示例
 
 比如我服务器有这样一个路径：`/www/wwwroot/blog/uploads/`，图片在里面
 
 我的网站根目录是`/www/wwwroot/blog/`，而FTP根目录是`/www/wwwroot/`
 
-那么我可以把**网站路径**设置为`/uploads/{year}/{month}/{fullName}`
+那么我可以把**网址路径**设置为`/uploads/{year}/{month}/{fullName}`
 
 **文件路径**设置为`/blog/uploads/{year}/{month}/{fullName}`

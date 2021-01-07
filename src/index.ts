@@ -40,7 +40,7 @@ export = (ctx: picgo) => {
         type: 'input',
         default: userConfig.url,
         required: true,
-        message: 'Url by ftp host.',
+        message: 'https://imba97.cn',
         alias: '域名地址'
       },
       {
@@ -49,7 +49,7 @@ export = (ctx: picgo) => {
         default: userConfig.path,
         required: true,
         message: '/uploads/{year}/{month}/{fullName}',
-        alias: '网站路径'
+        alias: '网址路径'
       },
       {
         name: 'uploadPath',
@@ -101,6 +101,15 @@ export = (ctx: picgo) => {
       throw new Error("Can't find uploader config")
     }
 
+    ftp.on('error', async function(err) {
+      ctx.log.error(err)
+      ctx.emit('notification', {
+        title: 'FTP 错误',
+        body: `${err}`,
+        text: ''
+      })
+    })
+
     ftp.connect({
       host: userConfig.host,
       prot: userConfig.port,
@@ -131,7 +140,12 @@ export = (ctx: picgo) => {
         if(filesCount <= 0) ftp.end()
       })
       .catch(err => {
-        ctx.log.error(`err: ${err}`)
+        ctx.log.error('FTP 发生错误，请检查配置是否正确')
+        ctx.emit('notification', {
+          title: 'FTP 错误',
+          body: err,
+          text: ''
+        })
       })
 
     }
@@ -151,6 +165,40 @@ export = (ctx: picgo) => {
 
     let userConfig: IFtpLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
 
+    let pathInfo = formatPath(output, userConfig)
+
+    // 自动创建文件夹 然后执行上传
+    return new Promise((resolve, reject) => {
+
+      let path = pathInfo.uploadPath.substr(0, pathInfo.uploadPath.lastIndexOf('/') + 1)
+
+      ftp.get(path, (err) => {
+        // 如果没有文件夹
+        if(err) {
+          // 创建文件夹
+          ftp.mkdir(path, true, (err) => {
+            if(err) reject(err)
+            resolve(doUpload(localPath, pathInfo))
+          })
+        } else {
+          resolve(doUpload(localPath, pathInfo))
+        }
+      })
+    })
+    
+  }
+
+  const doUpload = (localPath: string, formatPath: IFtpLoaderPathInfo) : Promise<string> => {
+    return new Promise(function (resolve, reject) {
+      ftp.put(localPath, formatPath.uploadPath, function(err) {
+        if (err) reject(err)
+        resolve(formatPath.path)
+      })
+    })
+    
+  }
+
+  const formatPath = (output: IImgInfo, userConfig: IFtpLoaderPathInfo) : IFtpLoaderPathInfo => {
     // 获取日期
     let date = new Date()
 
@@ -199,40 +247,14 @@ export = (ctx: picgo) => {
 
     }
 
-    // 自动创建文件夹 然后执行上传
-    return new Promise((resolve, reject) => {
-
-      let path = formatPath.uploadPath.substr(0, formatPath.uploadPath.lastIndexOf('/') + 1)
-
-      ftp.get(path, (err) => {
-        if(err) {
-          ftp.mkdir(path, true, (err) => {
-            if(err) reject(err)
-            resolve(doUpload(localPath, formatPath))
-          })
-        } else {
-          resolve(doUpload(localPath, formatPath))
-        }
-      })
-    })
-    
-  }
-
-  const doUpload = (localPath: string, formatPath: IFtpLoaderPathInfo) : Promise<string> => {
-    return new Promise(function (resolve, reject) {
-      ftp.put(localPath, formatPath.uploadPath, function(err) {
-        if (err) reject(err)
-        resolve(formatPath.path)
-      })
-    })
-    
+    return formatPath
   }
 
   const register = () => {
     ctx.helper.uploader.register('ftp-uploader', {
       handle,
       config,
-      name: 'FTP上传'
+      name: 'FTP 上传'
     })
   }
 
