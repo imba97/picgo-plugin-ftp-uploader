@@ -112,7 +112,7 @@ export = (ctx: picgo) => {
 
     ftp.connect({
       host: userConfig.host,
-      prot: userConfig.port,
+      port: userConfig.port,
       user: userConfig.username,
       password: userConfig.password
     })
