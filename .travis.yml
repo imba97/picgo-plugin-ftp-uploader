@@ -21,8 +21,8 @@ jobs:
         - npm run build
       deploy:
         provider: npm
-        email: ""
-        api_key: "${NPM_TOKEN}"
+        email: 'mail@imba97.cn'
+        api_key: '${NPM_TOKEN}'
         skip_cleanup: true
         on:
           branch: master
