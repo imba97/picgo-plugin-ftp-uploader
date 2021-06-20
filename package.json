@@ -1,6 +1,6 @@
 {
   "name": "picgo-plugin-ftp-uploader",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "FTP上传",
   "main": "dist/index.js",
   "publishConfig": {
