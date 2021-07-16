@@ -60,7 +60,7 @@ export const getFtpConfig = (
         })
     } else {
       // 本地
-      reject(JSON.parse(fs.readFileSync(userConfig.configFile).toString()))
+      resolve(JSON.parse(fs.readFileSync(userConfig.configFile).toString()))
     }
   })
 }
