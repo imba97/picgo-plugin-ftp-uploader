@@ -4,17 +4,64 @@ PicGo FTP 上传插件
 
 ## 配置
 
+配置分为“插件配置”和“配置文件配置”
+
+**插件配置**是在插件中配置
+
+**配置文件配置**是需要自行创建一个`json`文件进行配置
+
+### 插件配置
+
 名称 | 介绍 | 配置示例
 -|-|-
-域名地址 | 图片网站的域名 | https://imba97.cn
-网址路径 | 图片的路径 | /uploads/{year}/{month}/{fullName}
-文件路径 | 文件在FTP服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName}
-FTP地址 | 略 | 233.233.233.233
-端口 | 略 | 21
-用户名 | 略 | imba97
-密码 | 略 | imba97
+网站标识 | 多个FTP站的标识 | imba97
+配置文件 | 配置文件的路径或URL | C:/ftpUploader.json
 
-最终返回的地址是 **域名地址** + **网址路径**
+**关于配置文件**
+
+可以是本地文件，如 `C:/ftpUploader.json`
+也可以是网络文件，如 `https://imba97.cn/ftpUploader.json`
+
+### 配置文件配置
+
+配置文件是一个`json`文件，你可以在里面配置多个FTP服务器的信息
+
+例：
+
+```json
+{
+  "imba97": {
+    "url": "https://imba97.cn",
+    "path": "/imba97_cn/{year}/{month}/{fullName}",
+    "uploadPath": "/Web/imba97_cn/{year}/{month}/{fullName}",
+    "host": "1.2.3.4",
+    "port": 21,
+    "username": "ftpUser1",
+    "password": "ftpPassword1"
+  },
+  "btools": {
+    "url": "https://btools.cc",
+    "path": "/btools_cc/{year}/{month}/{fullName}",
+    "uploadPath": "/Web/btools_cc/{year}/{month}/{fullName}",
+    "host": "1.2.3.4",
+    "port": 21,
+    "username": "ftpUser2",
+    "password": "ftpPassword2"
+  }
+}
+```
+
+名称 | 介绍 | 配置示例
+-|-|-
+url | 图片网站的域名 | https://imba97.cn
+path | 图片的路径 | /uploads/{year}/{month}/{fullName}
+uploadPath | 文件在FTP服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName}
+host | FTP地址 | 233.233.233.233
+port | FTP端口 | 21
+username | 用户名 | imba97
+password | 密码 | imba97
+
+可通过配置网站标识`imba97`、`btools`来上传到不同的位置
 
 ## 路径 Format
 
