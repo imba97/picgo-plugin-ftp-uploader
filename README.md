@@ -12,19 +12,19 @@ PicGo FTP 上传插件
 
 ### 插件配置
 
-名称 | 介绍 | 配置示例
--|-|-
-网站标识 | 多个FTP站的标识 | imba97
-配置文件 | 配置文件的路径或URL | C:/ftpUploader.json
+| 名称     | 介绍                 | 配置示例            |
+| -------- | -------------------- | ------------------- |
+| 网站标识 | 多个 FTP 站的标识    | imba97              |
+| 配置文件 | 配置文件的路径或 URL | D:/ftpUploader.json |
 
 **关于配置文件**
 
-可以是本地文件，如 `C:/ftpUploader.json`
+可以是本地文件，如 `D:/ftpUploader.json`
 也可以是网络文件，如 `https://imba97.cn/ftpUploader.json`
 
 ### 配置文件配置
 
-配置文件是一个`json`文件，你可以在里面配置多个FTP服务器的信息
+配置文件是一个`json`文件，你可以在里面配置多个 FTP 服务器的信息
 
 例：
 
@@ -51,15 +51,15 @@ PicGo FTP 上传插件
 }
 ```
 
-名称 | 介绍 | 配置示例
--|-|-
-url | 图片网站的域名 | https://imba97.cn
-path | 图片的路径 | /uploads/{year}/{month}/{fullName}
-uploadPath | 文件在FTP服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName}
-host | FTP地址 | 233.233.233.233
-port | FTP端口 | 21
-username | 用户名 | imba97
-password | 密码 | imba97
+| 名称       | 介绍                        | 配置示例                                |
+| ---------- | --------------------------- | --------------------------------------- |
+| url        | 图片网站的域名              | https://imba97.cn                       |
+| path       | 图片的路径                  | /uploads/{year}/{month}/{fullName}      |
+| uploadPath | 文件在 FTP 服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName} |
+| host       | FTP 地址                    | 233.233.233.233                         |
+| port       | FTP 端口                    | 21                                      |
+| username   | 用户名                      | imba97                                  |
+| password   | 密码                        | imba97                                  |
 
 可通过配置网站标识`imba97`、`btools`来上传到不同的位置
 
@@ -67,15 +67,15 @@ password | 密码 | imba97
 
 路径配置可使用以下参数，使用示例：`/{year}/{month}/{fullName}`，输出示例：`/2020/01/imba97.png`
 
-名称 | 介绍 | 输出示例
--|-|-
-year | 当前年份 | 2021
-month | 当前月份 | 01
-fullName | 图片全名 | imba97.png
-fileName | 图片名称 | imba97
-hash16 | 图片 MD5 16位 | 68559cae1081d683
-hash32 | 图片 MD5 32位 | 68559cae1081d6836e09b043aa0b3af1
-ext | 图片后缀名 | png
+| 名称     | 介绍           | 输出示例                         |
+| -------- | -------------- | -------------------------------- |
+| year     | 当前年份       | 2021                             |
+| month    | 当前月份       | 01                               |
+| fullName | 图片全名       | imba97.png                       |
+| fileName | 图片名称       | imba97                           |
+| hash16   | 图片 MD5 16 位 | 68559cae1081d683                 |
+| hash32   | 图片 MD5 32 位 | 68559cae1081d6836e09b043aa0b3af1 |
+| ext      | 图片后缀名     | png                              |
 
 **注意**：除了`fullName`，其他都需要自行添加后缀名
 
@@ -85,7 +85,7 @@ ext | 图片后缀名 | png
 
 比如我服务器有这样一个路径：`/www/wwwroot/blog/uploads/`，图片在里面
 
-我的网站根目录是`/www/wwwroot/blog/`，而FTP根目录是`/www/wwwroot/`
+我的网站根目录是`/www/wwwroot/blog/`，而 FTP 根目录是`/www/wwwroot/`
 
 那么我可以把**网址路径**设置为`/uploads/{year}/{month}/{fullName}`
 
