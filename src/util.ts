@@ -9,40 +9,43 @@ export const formatPath = (
   // 获取日期
   let date = new Date()
 
+  let hashCache = { md5: null, sha1: null, sha256: null };
+  const hash = function (algorithm) {
+      if (!hashCache[algorithm]) {
+          hashCache[algorithm] = crypto.createHash(algorithm).update(
+            output.base64Image ? output.base64Image : output.buffer.toString()
+          ).digest('hex');
+      }
+      return hashCache[algorithm];
+  };
+
   // 格式化数据
   let formatData = {
-    // 路径
+    // 时间
+    timestamp: ((date.getTime() / 1000) | 0).toString(),
     year: `${date.getFullYear()}`,
-    month:
-      date.getMonth() < 9
-        ? `0${date.getMonth() + 1}`
-        : `${date.getMonth() + 1}`,
+    month: `0${date.getMonth() + 1}`.substr(-2),
+    day: `0${date.getDate()}`.substr(-2),
 
-    // 文件名
+    // 路径
     fullName: output.fileName,
     fileName: output.fileName.replace(output.extname, ''),
-    hash16: crypto
-      .createHash('md5')
-      .update(
-        output.base64Image ? output.base64Image : output.buffer.toString()
-      )
-      .digest('hex')
-      .substr(0, 16),
-    hash32: crypto
-      .createHash('md5')
-      .update(
-        output.base64Image ? output.base64Image : output.buffer.toString()
-      )
-      .digest('hex'),
+    ext: output.extname.replace('.', ''),
 
-    // 后缀名
-    ext: output.extname.replace('.', '')
+    // 哈希值
+    hash16: () => hash('md5').substr(0, 16),
+    hash32: () => hash('md5'),
+    md5sum: () => hash('md5'),
+    sha1sum: () => hash('sha1'),
+    sha256sum: () => hash('sha256'),
   }
+
   // 未格式化路径
   let pathInfo: IFtpLoaderPathInfo = {
     path: userConfig.path,
     uploadPath: userConfig.uploadPath
   }
+
   // 替换后的路径
   let formatPath: IFtpLoaderPathInfo = {
     path: '',
@@ -51,20 +54,17 @@ export const formatPath = (
 
   for (let key in pathInfo) {
     // 匹配 {} 内容
-    let out = 0
-    let reg = /(?:{(\w+)})/g
-    formatPath[key] = pathInfo[key]
-    let result: RegExpExecArray
-    while ((result = reg.exec(pathInfo[key]))) {
-      // 替换文本
-      formatPath[key] = formatPath[key].replace(
-        result[0],
-        formatData[result[1]]
-      )
+    let reg = /(?:{((\w+)(?::(\d+):(\d+))?)})/g;
+    let result: RegExpExecArray;
+    let newSubStr: String;
 
-      // 避免死循环 一般没啥问题
-      out++
-      if (out > 100) break
+    formatPath[key] = pathInfo[key]
+    while ((result = reg.exec(pathInfo[key]))) {
+      newSubStr = typeof formatData[result[2]] === 'function' ? formatData[result[2]]() : formatData[result[2]];
+      if (result[3] && result[4]) {
+        newSubStr = newSubStr.substring(Number(result[3]), Number(result[4]))
+      }
+      formatPath[key] = formatPath[key].replace(result[0],newSubStr)
     }
   }
 
