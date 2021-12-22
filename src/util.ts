@@ -1,6 +1,7 @@
+import { Buffer } from 'buffer';
+import { createHash } from 'crypto';
 import { IFtpLoaderPathInfo } from './config'
 import { IImgInfo } from 'picgo/dist/src/types'
-import crypto from 'crypto'
 
 export const formatPath = (
   output: IImgInfo,
@@ -12,8 +13,8 @@ export const formatPath = (
   let hashCache = { md5: null, sha1: null, sha256: null };
   const hash = function (algorithm) {
       if (!hashCache[algorithm]) {
-          hashCache[algorithm] = crypto.createHash(algorithm).update(
-            output.base64Image ? output.base64Image : output.buffer.toString()
+          hashCache[algorithm] = createHash(algorithm).update(
+            output.base64Image ? Buffer.from(output.base64Image, 'base64') : output.buffer
           ).digest('hex');
       }
       return hashCache[algorithm];
