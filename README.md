@@ -90,14 +90,3 @@ PicGo FTP 上传插件
 那么我可以把**网址路径**设置为`/uploads/{year}/{month}/{fullName}`
 
 **文件路径**设置为`/blog/uploads/{year}/{month}/{fullName}`
-
-## 贡献
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
