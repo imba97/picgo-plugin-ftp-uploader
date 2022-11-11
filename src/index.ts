@@ -3,9 +3,8 @@ import { IImgInfo } from 'picgo/dist/src/types'
 import { config, getFtpConfig, IFtpLoaderUserConfig } from './config'
 import { formatPath } from './util'
 import { Client } from 'basic-ftp'
-import { fs } from 'fs'
-import { path } from 'path'
-
+import fs from 'fs'
+import path from 'path'
 
 export = (ctx: picgo) => {
   const client = new Client()
@@ -82,31 +81,40 @@ export = (ctx: picgo) => {
     await client.ensureDir(dir)
 
     //如果是网络图片，先存到本地再使用 FTP 上传
-    let isWebImage = false;
-    let reg = /^https?:\/\//ig;
+    let isWebImage = false
+    const reg = /^https?:\/\//gi
+
     if (reg.test(localPath)) {
-        isWebImage = true;
-        let image = output.buffer;
-        if (!image && output.base64Image) {
-          image = Buffer.from(output.base64Image, 'base64');
-        }
-        let fname = output.fileName;
-        if (fname.substring(fname.length - output.extname.length, fname.length) != output.extname) {
-            fname = fname + output.extname;
-        }
-        localPath = path.join(ctx.baseDir, fname);
-        fs.writeFileSync(localPath, image);
-        ctx.log.info("save web image to local.");
+      isWebImage = true
+
+      let image = output.buffer
+
+      if (!image && output.base64Image) {
+        image = Buffer.from(output.base64Image, 'base64')
+      }
+
+      let fname = output.fileName
+
+      if (path.extname(fname) !== output.extname) {
+        fname = fname + output.extname
+      }
+
+      localPath = path.join(ctx.baseDir, fname)
+
+      fs.writeFileSync(localPath, image)
+
+      ctx.log.info('save web image to local.')
     }
-        
+
     const ftpResponse = await client.uploadFrom(localPath, pathInfo.uploadPath)
 
     // 执行上传
     return new Promise((resolve, reject) => {
-        if (isWebImage) {
-            fs.unlinkSync(localPath);
-            ctx.log.info("local temp image removeed.");
-        }
+      if (isWebImage) {
+        fs.unlinkSync(localPath)
+        ctx.log.info('local temp image removeed.')
+      }
+
       if (ftpResponse.code === 226) {
         resolve(pathInfo.path)
       } else {
