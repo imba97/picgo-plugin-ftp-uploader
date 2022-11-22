@@ -94,9 +94,14 @@ export = (ctx: picgo) => {
       }
 
       let fname = output.fileName
-
-      if (path.extname(fname) !== output.extname) {
-        fname = fname + output.extname
+      
+      let extname = fname.match(/\.[^.]+$/ig);
+      if (extname) { //文件名有后缀
+        output.extname = extname[0];
+        pathInfo = util_1.formatPath(output, configItem[userConfig.site]); //为了避免出现jpg和gpeg后缀的问题，例如：154848x9rs296aca6eii44.jpg_1668137293.jpeg 
+      }
+      else { //无后缀
+        fname = fname + output.extname;
       }
 
       localPath = path.join(ctx.baseDir, fname)
