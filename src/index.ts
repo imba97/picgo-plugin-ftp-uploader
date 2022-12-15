@@ -1,15 +1,15 @@
-import picgo from 'picgo'
-import { IImgInfo } from 'picgo/dist/src/types'
+import type { PicGo } from 'picgo'
+import type { IImgInfo } from 'picgo'
 import { config, getFtpConfig, IFtpLoaderUserConfig } from './config'
 import { formatPath } from './util'
 import { Client } from 'basic-ftp'
 import fs from 'fs'
 import path from 'path'
 
-export = (ctx: picgo) => {
+export = (ctx: PicGo) => {
   const client = new Client()
 
-  const handle = async (ctx: picgo) => {
+  const handle = async (ctx: PicGo) => {
     let userConfig: IFtpLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
     if (!userConfig) {
       throw new Error("Can't find uploader config")
@@ -49,10 +49,11 @@ export = (ctx: picgo) => {
           if (filesCount <= 0) client.close()
         })
         .catch((err) => {
-          ctx.log.error('FTP 发生错误，请检查配置是否正确')
+          ctx.log.error(`FTP ERROR: ${err.message}`)
+
           ctx.emit('notification', {
-            title: 'FTP 错误',
-            body: err,
+            title: 'FTP ERROR',
+            body: err.message,
             text: ''
           })
         })
@@ -78,7 +79,9 @@ export = (ctx: picgo) => {
     )
 
     // 创建文件夹
-    await client.ensureDir(dir)
+    await client.ensureDir(dir).catch((err) => {
+      ctx.log.error(`FTP ERROR: ${err.message}`)
+    })
 
     //如果是网络图片，先存到本地再使用 FTP 上传
     let isWebImage = false
@@ -94,14 +97,15 @@ export = (ctx: picgo) => {
       }
 
       let fname = output.fileName
-      
-      let extname = fname.match(/\.[^.]+$/ig);
-      if (extname) { //文件名有后缀
-        output.extname = extname[0];
-        pathInfo = util_1.formatPath(output, configItem[userConfig.site]); //为了避免出现jpg和gpeg后缀的问题，例如：154848x9rs296aca6eii44.jpg_1668137293.jpeg 
-      }
-      else { //无后缀
-        fname = fname + output.extname;
+
+      let extname = fname.match(/\.[^.]+$/gi)
+      if (extname) {
+        //文件名有后缀
+        output.extname = extname[0]
+        pathInfo = formatPath(output, configItem[userConfig.site]) //为了避免出现jpg和gpeg后缀的问题，例如：154848x9rs296aca6eii44.jpg_1668137293.jpeg
+      } else {
+        //无后缀
+        fname = fname + output.extname
       }
 
       localPath = path.join(ctx.baseDir, fname)

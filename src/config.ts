@@ -1,9 +1,9 @@
-import picgo from 'picgo'
+import type { PicGo } from 'picgo'
 import http from 'http'
 import https from 'https'
 import fs from 'fs'
 
-export const config = (ctx: picgo) => {
+export const config = (ctx: PicGo) => {
   let userConfig = ctx.getConfig<IFtpLoaderUserConfig>('picBed.ftp-uploader')
   if (!userConfig) {
     userConfig = {

@@ -1,7 +1,7 @@
-import { Buffer } from 'buffer';
-import { createHash } from 'crypto';
+import { Buffer } from 'buffer'
+import { createHash } from 'crypto'
 import { IFtpLoaderPathInfo } from './config'
-import { IImgInfo } from 'picgo/dist/src/types'
+import type { IImgInfo } from 'picgo'
 
 export const formatPath = (
   output: IImgInfo,
@@ -10,15 +10,19 @@ export const formatPath = (
   // 获取日期
   let date = new Date()
 
-  let hashCache = { md5: null, sha1: null, sha256: null };
+  let hashCache = { md5: null, sha1: null, sha256: null }
   const hash = function (algorithm) {
-      if (!hashCache[algorithm]) {
-          hashCache[algorithm] = createHash(algorithm).update(
-            output.base64Image ? Buffer.from(output.base64Image, 'base64') : output.buffer
-          ).digest('hex');
-      }
-      return hashCache[algorithm];
-  };
+    if (!hashCache[algorithm]) {
+      hashCache[algorithm] = createHash(algorithm)
+        .update(
+          output.base64Image
+            ? Buffer.from(output.base64Image, 'base64')
+            : output.buffer
+        )
+        .digest('hex')
+    }
+    return hashCache[algorithm]
+  }
 
   // 格式化数据
   let formatData = {
@@ -38,7 +42,7 @@ export const formatPath = (
     hash32: () => hash('md5'),
     md5sum: () => hash('md5'),
     sha1sum: () => hash('sha1'),
-    sha256sum: () => hash('sha256'),
+    sha256sum: () => hash('sha256')
   }
 
   // 未格式化路径
@@ -55,17 +59,20 @@ export const formatPath = (
 
   for (let key in pathInfo) {
     // 匹配 {} 内容
-    let reg = /(?:{((\w+)(?::(\d+):(\d+))?)})/g;
-    let result: RegExpExecArray;
-    let newSubStr: String;
+    let reg = /(?:{((\w+)(?::(\d+):(\d+))?)})/g
+    let result: RegExpExecArray
+    let newSubStr: String
 
     formatPath[key] = pathInfo[key]
     while ((result = reg.exec(pathInfo[key]))) {
-      newSubStr = typeof formatData[result[2]] === 'function' ? formatData[result[2]]() : formatData[result[2]];
+      newSubStr =
+        typeof formatData[result[2]] === 'function'
+          ? formatData[result[2]]()
+          : formatData[result[2]]
       if (result[3] && result[4]) {
         newSubStr = newSubStr.substring(Number(result[3]), Number(result[4]))
       }
-      formatPath[key] = formatPath[key].replace(result[0],newSubStr)
+      formatPath[key] = formatPath[key].replace(result[0], newSubStr)
     }
   }
 
