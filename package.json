@@ -1,35 +1,46 @@
 {
   "name": "picgo-plugin-ftp-uploader",
   "version": "1.1.4",
+  "packageManager": "pnpm@9.6.0",
   "description": "An uploader for uploading via FTP",
-  "main": "dist/index.js",
-  "publishConfig": {
-    "access": "public"
+  "author": "imba97",
+  "license": "MIT",
+  "homepage": "https://github.com/imba97/picgo-plugin-ftp-uploader#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/imba97/picgo-plugin-ftp-uploader"
   },
-  "homepage": "https://github.com/imba97/picgo-plugin-ftp-uploader",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p .",
-    "dev": "tsc -w -p .",
-    "patch": "npm version patch && git push origin master && git push origin --tags",
-    "minor": "npm version minor && git push origin master && git push origin --tags",
-    "major": "npm version major && git push origin master && git push origin --tags"
+  "bugs": {
+    "url": "https://github.com/imba97/picgo-plugin-ftp-uploader/issues"
   },
   "keywords": [
     "picgo",
     "picgo-gui-plugin",
     "picgo-plugin"
   ],
-  "author": "imba97",
-  "license": "MIT",
-  "devDependencies": {
-    "@imba97/eslint-config": "^0.0.5",
-    "@types/node": "16.9.1",
-    "eslint": "^9.17.0",
-    "picgo": "^1.5.8",
-    "typescript": "^5.7.2"
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": "bin/iconfontx.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "lint": "eslint",
+    "release": "bumpp"
   },
   "dependencies": {
     "basic-ftp": "^5.0.5"
+  },
+  "devDependencies": {
+    "@imba97/eslint-config": "^0.0.5",
+    "@types/node": "16.9.1",
+    "bumpp": "^9.9.1",
+    "eslint": "^9.17.0",
+    "picgo": "^1.5.8",
+    "typescript": "^5.7.2",
+    "unbuild": "^3.0.1"
   }
 }
