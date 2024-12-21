@@ -1,26 +1,43 @@
-name: publish-package
+name: Release
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
 
 jobs:
-  publish-npm:
+  release:
+    permissions:
+      id-token: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
         with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
+          fetch-depth: 0
 
-      - name: Install dependencies 📦️
-        run: npm install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
 
-      - name: build
-        run: npm run build
+      - name: Set node
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
-      - run: npm publish
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile
+
+      - name: PNPM build
+        run: pnpm run build
+
+      - name: Publish to NPM
+        run: pnpm -r publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_CONFIG_PROVENANCE: true
