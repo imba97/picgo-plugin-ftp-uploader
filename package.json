@@ -23,21 +23,13 @@
   "author": "imba97",
   "license": "MIT",
   "devDependencies": {
+    "@imba97/eslint-config": "^0.0.5",
     "@types/node": "16.9.1",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "eslint-config-standard-with-typescript": "^23.0.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "picgo": "^1.5.0-alpha.13",
-    "typescript": "^4.8.4",
-    "eslint": "^8.25.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.3.0",
-    "eslint-plugin-promise": "^6.1.0"
+    "eslint": "^9.17.0",
+    "picgo": "^1.5.8",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "basic-ftp": "^5.0.2"
+    "basic-ftp": "^5.0.5"
   }
 }
