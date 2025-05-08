@@ -115,7 +115,7 @@ export default (ctx: IPicGo) => {
         .then((path) => {
           const imgUrl = `${
             /\/$/.test(config.url)
-              ? config.url.substr(0, config.url.length)
+              ? config.url.slice(0, config.url.length)
               : config.url
           }${path}`
 
