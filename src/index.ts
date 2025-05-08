@@ -119,8 +119,6 @@ export default (ctx: IPicGo) => {
               : config.url
           }${path}`
 
-          delete output[i].buffer
-
           output[i].url = imgUrl
           output[i].imgUrl = imgUrl
 
