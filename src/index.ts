@@ -21,7 +21,7 @@ export default (ctx: IPicGo) => {
     let pathInfo = formatPath(output, configItem[userConfig.site])
 
     // 文件夹的路径
-    const dir = pathInfo.uploadPath.substr(
+    const dir = pathInfo.uploadPath.slice(
       0,
       pathInfo.uploadPath.lastIndexOf('/')
     )
