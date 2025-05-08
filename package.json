@@ -29,10 +29,12 @@
     "release": "bumpp"
   },
   "dependencies": {
-    "basic-ftp": "^5.0.5"
+    "ftp": "^0.3.10",
+    "pathe": "^2.0.3"
   },
   "devDependencies": {
     "@imba97/eslint-config": "^0.0.6",
+    "@types/ftp": "^0.3.36",
     "@types/node": "^22.15.15",
     "bumpp": "^10.1.0",
     "eslint": "^9.26.0",

@@ -1,8 +1,7 @@
 import type { IPicGo, IPluginConfig } from 'picgo'
 import fs from 'node:fs'
-import http from 'node:http'
-import https from 'node:https'
-import process from 'node:process'
+import { request } from 'node:https'
+import { URL } from 'node:url'
 
 export function config(ctx: IPicGo): IPluginConfig[] {
   let userConfig = ctx.getConfig<IFtpLoaderUserConfig>('picBed.ftp-uploader')
@@ -35,22 +34,19 @@ export function config(ctx: IPicGo): IPluginConfig[] {
 
 export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: string]: IFtpLoaderUserConfigItem }> {
   return new Promise((resolve, reject) => {
-    // 兼容 https
-    let request: typeof http | typeof https | null = null
-
-    if (userConfig.configFile.startsWith('https')) {
-      request = https
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-    }
-    else if (userConfig.configFile.startsWith('http')) {
-      request = http
-    }
-
-    // 如果是网址 则用 http 否则是本地 用 fs
-    if (request !== null) {
-      // 网络
-      request
-        .get(userConfig.configFile, (res) => {
+    // 判断是否是网络请求
+    if (userConfig.configFile.startsWith('http')) {
+      // 使用统一的请求方法
+      const url = new URL(userConfig.configFile)
+      const req = request(
+        {
+          hostname: url.hostname,
+          path: url.pathname + url.search,
+          port: url.port || (url.protocol === 'https:' ? 443 : 80),
+          method: 'GET',
+          protocol: url.protocol
+        },
+        (res) => {
           if (res.statusCode !== 200) {
             reject(res.statusCode)
             res.resume()
@@ -58,7 +54,6 @@ export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: 
           }
 
           res.setEncoding('utf8')
-
           let body = ''
           res.on('data', (chunk) => {
             body += chunk
@@ -66,10 +61,13 @@ export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: 
           res.on('end', () => {
             resolve(JSON.parse(body))
           })
-        })
-        .on('error', (e) => {
-          reject(e.message)
-        })
+        }
+      )
+
+      req.on('error', (e) => {
+        reject(e.message)
+      })
+      req.end()
     }
     else {
       // 本地

@@ -18,9 +18,6 @@ export default defineBuildConfig({
     esbuild: {
       format: 'cjs'
     },
-    dts: {
-      respectExternal: false
-    },
     output: {
       format: 'cjs',
       exports: 'auto'

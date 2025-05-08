@@ -58,26 +58,38 @@ export function formatPath(output: IImgInfo, userConfig: IFtpLoaderPathInfo): IF
     // 确保 key 是 IFtpLoaderPathInfo 的键
     const typedKey = key as keyof IFtpLoaderPathInfo
 
-    // 匹配 {} 内容
-    const reg = /\{\w+(?::\d+:\d+)?\}/g
+    // 匹配 {} 内容，改进正则表达式以正确提取变量名和参数
+    const reg = /\{([^{}:]+)(?::(\d+):(\d+))?\}/g
     let result: RegExpExecArray | null
-    let newSubStr: string
 
     formatPath[typedKey] = pathInfo[typedKey]
+
+    // 临时存储结果，避免多次替换影响正则匹配
+    let formattedString = pathInfo[typedKey]
+
     // eslint-disable-next-line no-cond-assign
     while ((result = reg.exec(pathInfo[typedKey]))) {
       const [target, keyName, start, end] = result
 
-      newSubStr
-        = typeof formatData[keyName] === 'function'
-          ? formatData[keyName]()
-          : formatData[keyName]
+      // 检查变量是否存在
+      if (formatData[keyName] === undefined) {
+        continue
+      }
 
-      if (start && end) {
+      let newSubStr = typeof formatData[keyName] === 'function'
+        ? formatData[keyName]()
+        : formatData[keyName]
+
+      // 只在变量存在且有范围指定时处理子字符串
+      if (newSubStr !== undefined && start !== undefined && end !== undefined) {
         newSubStr = newSubStr.substring(Number(start), Number(end))
       }
-      formatPath[typedKey] = formatPath[typedKey].replace(target, newSubStr)
+
+      // 替换全部匹配到的目标
+      formattedString = formattedString.replace(target, newSubStr !== undefined ? newSubStr : target)
     }
+
+    formatPath[typedKey] = formattedString
   }
 
   return formatPath
