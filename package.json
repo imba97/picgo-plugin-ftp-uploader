@@ -19,10 +19,8 @@
     "picgo-plugin"
   ],
   "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/index.cjs"
   ],
   "scripts": {
     "prepare": "simple-git-hooks",
