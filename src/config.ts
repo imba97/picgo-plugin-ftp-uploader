@@ -1,9 +1,10 @@
-import type { PicGo } from 'picgo'
-import http from 'http'
-import https from 'https'
-import fs from 'fs'
+import type { IPicGo, IPluginConfig } from 'picgo'
+import fs from 'node:fs'
+import http from 'node:http'
+import https from 'node:https'
+import process from 'node:process'
 
-export const config = (ctx: PicGo) => {
+export function config(ctx: IPicGo): IPluginConfig[] {
   let userConfig = ctx.getConfig<IFtpLoaderUserConfig>('picBed.ftp-uploader')
   if (!userConfig) {
     userConfig = {
@@ -11,6 +12,7 @@ export const config = (ctx: PicGo) => {
       configFile: ''
     }
   }
+
   return [
     {
       name: 'site',
@@ -31,17 +33,16 @@ export const config = (ctx: PicGo) => {
   ]
 }
 
-export const getFtpConfig = (
-  userConfig: IFtpLoaderUserConfig
-): Promise<{ [key: string]: IFtpLoaderUserConfigItem }> => {
+export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: string]: IFtpLoaderUserConfigItem }> {
   return new Promise((resolve, reject) => {
     // 兼容 https
     let request: typeof http | typeof https | null = null
 
-    if (/^https/.test(userConfig.configFile)) {
+    if (userConfig.configFile.startsWith('https')) {
       request = https
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-    } else if (/^http/.test(userConfig.configFile)) {
+    }
+    else if (userConfig.configFile.startsWith('http')) {
       request = http
     }
 
@@ -69,7 +70,8 @@ export const getFtpConfig = (
         .on('error', (e) => {
           reject(e.message)
         })
-    } else {
+    }
+    else {
       // 本地
       resolve(JSON.parse(fs.readFileSync(userConfig.configFile).toString()))
     }
@@ -81,7 +83,7 @@ export interface IFtpLoaderUserConfig {
   configFile: string
 }
 
-export interface IFtpLoaderUserConfigItem extends Object {
+export interface IFtpLoaderUserConfigItem {
   url: string
   path: string
   uploadPath: string

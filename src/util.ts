@@ -1,23 +1,20 @@
-import { Buffer } from 'buffer'
-import { createHash } from 'crypto'
-import { IFtpLoaderPathInfo } from './config'
 import type { IImgInfo } from 'picgo'
+import type { IFtpLoaderPathInfo } from './config'
+import { Buffer } from 'node:buffer'
+import { createHash } from 'node:crypto'
 
-export const formatPath = (
-  output: IImgInfo,
-  userConfig: IFtpLoaderPathInfo
-): IFtpLoaderPathInfo => {
+export function formatPath(output: IImgInfo, userConfig: IFtpLoaderPathInfo): IFtpLoaderPathInfo {
   // 获取日期
-  let date = new Date()
+  const date = new Date()
 
-  let hashCache = { md5: null, sha1: null, sha256: null }
-  const hash = function (algorithm) {
+  const hashCache: Record<string, string | null> = { md5: null, sha1: null, sha256: null }
+  const hash = function (algorithm: string) {
     if (!hashCache[algorithm]) {
       hashCache[algorithm] = createHash(algorithm)
         .update(
           output.base64Image
-            ? Buffer.from(output.base64Image, 'base64')
-            : output.buffer
+            ? new Uint8Array(Buffer.from(output.base64Image, 'base64').buffer)
+            : new Uint8Array((output.buffer || Buffer.alloc(0)).buffer)
         )
         .digest('hex')
     }
@@ -25,20 +22,20 @@ export const formatPath = (
   }
 
   // 格式化数据
-  let formatData = {
+  const formatData: Record<string, any> = {
     // 时间
     timestamp: ((date.getTime() / 1000) | 0).toString(),
     year: `${date.getFullYear()}`,
-    month: `0${date.getMonth() + 1}`.substr(-2),
-    day: `0${date.getDate()}`.substr(-2),
+    month: `0${date.getMonth() + 1}`.slice(-2),
+    day: `0${date.getDate()}`.slice(-2),
 
     // 路径
     fullName: output.fileName,
-    fileName: output.fileName.replace(output.extname, ''),
-    ext: output.extname.replace('.', ''),
+    fileName: output.fileName!.replace(output.extname!, ''),
+    ext: output.extname!.replace('.', ''),
 
     // 哈希值
-    hash16: () => hash('md5').substr(0, 16),
+    hash16: () => hash('md5').slice(0, 16),
     hash32: () => hash('md5'),
     md5sum: () => hash('md5'),
     sha1sum: () => hash('sha1'),
@@ -46,33 +43,40 @@ export const formatPath = (
   }
 
   // 未格式化路径
-  let pathInfo: IFtpLoaderPathInfo = {
+  const pathInfo: IFtpLoaderPathInfo = {
     path: userConfig.path,
     uploadPath: userConfig.uploadPath
   }
 
   // 替换后的路径
-  let formatPath: IFtpLoaderPathInfo = {
+  const formatPath: IFtpLoaderPathInfo = {
     path: '',
     uploadPath: ''
   }
 
-  for (let key in pathInfo) {
-    // 匹配 {} 内容
-    let reg = /(?:{((\w+)(?::(\d+):(\d+))?)})/g
-    let result: RegExpExecArray
-    let newSubStr: String
+  for (const key in pathInfo) {
+    // 确保 key 是 IFtpLoaderPathInfo 的键
+    const typedKey = key as keyof IFtpLoaderPathInfo
 
-    formatPath[key] = pathInfo[key]
-    while ((result = reg.exec(pathInfo[key]))) {
-      newSubStr =
-        typeof formatData[result[2]] === 'function'
-          ? formatData[result[2]]()
-          : formatData[result[2]]
-      if (result[3] && result[4]) {
-        newSubStr = newSubStr.substring(Number(result[3]), Number(result[4]))
+    // 匹配 {} 内容
+    const reg = /\{\w+(?::\d+:\d+)?\}/g
+    let result: RegExpExecArray | null
+    let newSubStr: string
+
+    formatPath[typedKey] = pathInfo[typedKey]
+    // eslint-disable-next-line no-cond-assign
+    while ((result = reg.exec(pathInfo[typedKey]))) {
+      const [target, keyName, start, end] = result
+
+      newSubStr
+        = typeof formatData[keyName] === 'function'
+          ? formatData[keyName]()
+          : formatData[keyName]
+
+      if (start && end) {
+        newSubStr = newSubStr.substring(Number(start), Number(end))
       }
-      formatPath[key] = formatPath[key].replace(result[0], newSubStr)
+      formatPath[typedKey] = formatPath[typedKey].replace(target, newSubStr)
     }
   }
 

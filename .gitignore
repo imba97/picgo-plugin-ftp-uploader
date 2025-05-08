@@ -2,6 +2,7 @@ node_modules/
 dist/
 .history/
 .DS_Store
+.eslintcache
 yarn-error.log
 temp.js
 package-lock.json

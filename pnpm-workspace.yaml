@@ -1,0 +1,5 @@
+onlyBuiltDependencies:
+  - ejs
+  - esbuild
+  - simple-git-hooks
+  - unrs-resolver
