@@ -16,7 +16,11 @@ export default defineBuildConfig({
       requireReturnsDefault: 'auto'
     },
     esbuild: {
-      format: 'cjs'
+      format: 'cjs',
+      minify: true
+    },
+    dts: {
+      respectExternal: false
     },
     output: {
       format: 'cjs',
