@@ -22,11 +22,10 @@ export default defineBuildConfig({
       respectExternal: false
     },
     output: {
-      format: 'cjs'
+      format: 'cjs',
+      exports: 'auto'
     }
   },
   clean: true,
-  declaration: true,
-  outDir: 'dist',
-  externals: []
+  declaration: true
 })
