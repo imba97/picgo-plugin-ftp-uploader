@@ -20,7 +20,8 @@
   ],
   "main": "dist/index.cjs",
   "files": [
-    "dist/index.cjs"
+    "dist/index.cjs",
+    "logo.png"
   ],
   "scripts": {
     "prepare": "simple-git-hooks",
