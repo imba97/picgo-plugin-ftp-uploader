@@ -4,17 +4,16 @@ PicGo FTP 上传插件
 
 ## 配置
 
-配置分为“插件配置”和“配置文件配置”
+配置分为
 
-**插件配置**是在插件中配置
-
-**配置文件配置**是需要自行创建一个`json`文件进行配置
+- 插件配置，在插件中配置
+- 配置文件配置，是需要自行创建一个 `json` 文件进行配置
 
 ### 插件配置
 
 | 名称     | 介绍                 | 配置示例            |
 | -------- | -------------------- | ------------------- |
-| 网站标识 | 多个 FTP 站的标识    | imba97              |
+| 网站标识 | 多个 FTP 站的标识    | site1               |
 | 配置文件 | 配置文件的路径或 URL | D:/ftpUploader.json |
 
 **关于配置文件**
@@ -24,25 +23,25 @@ PicGo FTP 上传插件
 
 ### 配置文件配置
 
-配置文件是一个`json`文件，你可以在里面配置多个 FTP 服务器的信息
+配置文件是一个 `json` 文件，你可以在里面配置多个 FTP 服务器的信息
 
 例：
 
 ```json
 {
-  "imba97": {
-    "url": "https://imba97.cn",
-    "path": "/imba97_cn/{year}/{month}/{fullName}",
-    "uploadPath": "/Web/imba97_cn/{year}/{month}/{fullName}",
+  "site1": {
+    "url": "https://mysite1.com",
+    "path": "/mysite1.com/{year}/{month}/{fullName}",
+    "uploadPath": "/Web/mysite1.com/{year}/{month}/{fullName}",
     "host": "1.2.3.4",
     "port": 21,
     "username": "ftpUser1",
     "password": "ftpPassword1"
   },
-  "btools": {
-    "url": "https://btools.cc",
-    "path": "/btools_cc/{year}/{month}/{fullName}",
-    "uploadPath": "/Web/btools_cc/{year}/{month}/{fullName}",
+  "site2": {
+    "url": "https://mysite2.com",
+    "path": "/mysite2.com/{year}/{month}/{fullName}",
+    "uploadPath": "/Web/mysite2.com/{year}/{month}/{fullName}",
     "host": "1.2.3.4",
     "port": 21,
     "username": "ftpUser2",
@@ -53,7 +52,7 @@ PicGo FTP 上传插件
 
 | 名称       | 介绍                        | 配置示例                                |
 | ---------- | --------------------------- | --------------------------------------- |
-| url        | 图片网站的域名              | https://imba97.cn                       |
+| url        | 图片网站的域名              | https://mysite.com                      |
 | path       | 图片的路径                  | /uploads/{year}/{month}/{fullName}      |
 | uploadPath | 文件在 FTP 服务器的真实路径 | /blog/uploads/{year}/{month}/{fullName} |
 | host       | FTP 地址                    | 233.233.233.233                         |
@@ -61,7 +60,7 @@ PicGo FTP 上传插件
 | username   | 用户名                      | imba97                                  |
 | password   | 密码                        | imba97                                  |
 
-可通过配置网站标识`imba97`、`btools`来上传到不同的位置
+可通过配置网站标识 `site1`、`site2` 来上传到不同的位置
 
 ## 路径 Format
 
@@ -77,16 +76,16 @@ PicGo FTP 上传插件
 | hash32   | 图片 MD5 32 位 | 68559cae1081d6836e09b043aa0b3af1 |
 | ext      | 图片后缀名     | png                              |
 
-**注意**：除了`fullName`，其他都需要自行添加后缀名
+**注意**：除了 `fullName`，其他都需要自行添加后缀名
 
 ## 路径配置示例
 
-**网址路径**和**文件路径**的配置示例
+**网址路径** 和 **文件路径** 的配置示例
 
 比如我服务器有这样一个路径：`/www/wwwroot/blog/uploads/`，图片在里面
 
-我的网站根目录是`/www/wwwroot/blog/`，而 FTP 根目录是`/www/wwwroot/`
+我的网站根目录是 `/www/wwwroot/blog/`，而 FTP 根目录是 `/www/wwwroot/`
 
-那么我可以把**网址路径**设置为`/uploads/{year}/{month}/{fullName}`
+那么我可以把 **网址路径** 设置为 `/uploads/{year}/{month}/{fullName}`
 
-**文件路径**设置为`/blog/uploads/{year}/{month}/{fullName}`
+**文件路径** 设置为 `/blog/uploads/{year}/{month}/{fullName}`
