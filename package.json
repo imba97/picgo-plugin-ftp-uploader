@@ -1,6 +1,6 @@
 {
   "name": "picgo-plugin-ftp-uploader",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "packageManager": "pnpm@10.10.0",
   "description": "An uploader for uploading via FTP",
   "author": "imba97",
