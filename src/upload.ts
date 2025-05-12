@@ -1,13 +1,13 @@
 import type { IPicGo } from 'picgo'
-import type { IFtpLoaderUserConfig } from './config'
+import type { IFtpLoaderUserConfigItem } from './config'
 import type { FtpUploader } from './ftp'
 import { Buffer } from 'node:buffer'
-import { getFtpConfig } from './config'
 import { formatPath } from './util'
 
 export function useUploader(
   ctx: IPicGo,
-  client: FtpUploader
+  client: FtpUploader,
+  config: IFtpLoaderUserConfigItem
 ) {
   // 公共逻辑
   const doUpload = async (
@@ -33,10 +33,8 @@ export function useUploader(
 
   // 处理本地路径上传
   const upload = async (localPath: string, idx: number) => {
-    const userConfig: IFtpLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
-    const configItem = await getFtpConfig(userConfig)
     const output = ctx.output[idx]
-    let pathInfo = formatPath(output, configItem[userConfig.site])
+    let pathInfo = formatPath(output, config)
 
     const reg = /^https?:\/\//gi
 
@@ -53,7 +51,7 @@ export function useUploader(
       const extname = fname.match(/\.[^.]+$/g)
       if (extname) {
         output.extname = extname[0]
-        pathInfo = formatPath(output, configItem[userConfig.site])
+        pathInfo = formatPath(output, config)
       }
       else {
         fname = fname + output.extname
@@ -75,10 +73,8 @@ export function useUploader(
 
   // 处理 Buffer 上传
   const uploadBuffer = async (buffer: Buffer, idx: number) => {
-    const userConfig: IFtpLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
-    const configItem = await getFtpConfig(userConfig)
     const output = ctx.output[idx]
-    const pathInfo = formatPath(output, configItem[userConfig.site])
+    const pathInfo = formatPath(output, config)
     return doUpload(buffer, pathInfo)
   }
 
