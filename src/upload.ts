@@ -1,5 +1,5 @@
 import type { IPicGo } from 'picgo'
-import type { IFtpLoaderUserConfigItem } from './config'
+import type { FTPLoaderUserConfigItem } from './config'
 import type { FtpUploader } from './ftp'
 import { Buffer } from 'node:buffer'
 import { formatPath } from './util'
@@ -7,7 +7,7 @@ import { formatPath } from './util'
 export function useUploader(
   ctx: IPicGo,
   client: FtpUploader,
-  config: IFtpLoaderUserConfigItem
+  config: FTPLoaderUserConfigItem
 ) {
   // 公共逻辑
   const doUpload = async (

@@ -1,9 +1,9 @@
 import type { IImgInfo } from 'picgo'
-import type { IFtpLoaderPathInfo } from './config'
+import type { FTPLoaderPathInfo } from './config'
 import { Buffer } from 'node:buffer'
 import { createHash } from 'node:crypto'
 
-export function formatPath(output: IImgInfo, userConfig: IFtpLoaderPathInfo): IFtpLoaderPathInfo {
+export function formatPath(output: IImgInfo, userConfig: FTPLoaderPathInfo): FTPLoaderPathInfo {
   // 获取日期
   const date = new Date()
 
@@ -43,20 +43,20 @@ export function formatPath(output: IImgInfo, userConfig: IFtpLoaderPathInfo): IF
   }
 
   // 未格式化路径
-  const pathInfo: IFtpLoaderPathInfo = {
+  const pathInfo: FTPLoaderPathInfo = {
     path: userConfig.path,
     uploadPath: userConfig.uploadPath
   }
 
   // 替换后的路径
-  const formatPath: IFtpLoaderPathInfo = {
+  const formatPath: FTPLoaderPathInfo = {
     path: '',
     uploadPath: ''
   }
 
   for (const key in pathInfo) {
     // 确保 key 是 IFtpLoaderPathInfo 的键
-    const typedKey = key as keyof IFtpLoaderPathInfo
+    const typedKey = key as keyof FTPLoaderPathInfo
 
     // 匹配 {} 内容，改进正则表达式以正确提取变量名和参数
     const reg = /\{([^{}:]+)(?::(\d+):(\d+))?\}/g

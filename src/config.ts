@@ -4,7 +4,7 @@ import { request } from 'node:https'
 import { URL } from 'node:url'
 
 export function config(ctx: IPicGo): IPluginConfig[] {
-  let userConfig = ctx.getConfig<IFtpLoaderUserConfig>('picBed.ftp-uploader')
+  let userConfig = ctx.getConfig<FTPLoaderUserConfig>('picBed.ftp-uploader')
   if (!userConfig) {
     userConfig = {
       site: '',
@@ -32,7 +32,7 @@ export function config(ctx: IPicGo): IPluginConfig[] {
   ]
 }
 
-export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: string]: IFtpLoaderUserConfigItem }> {
+export function getFtpConfig(userConfig: FTPLoaderUserConfig): Promise<{ [key: string]: FTPLoaderUserConfigItem }> {
   return new Promise((resolve, reject) => {
     // 判断是否是网络请求
     if (userConfig.configFile.startsWith('http')) {
@@ -76,12 +76,12 @@ export function getFtpConfig(userConfig: IFtpLoaderUserConfig): Promise<{ [key: 
   })
 }
 
-export interface IFtpLoaderUserConfig {
+export interface FTPLoaderUserConfig {
   site: string
   configFile: string
 }
 
-export interface IFtpLoaderUserConfigItem {
+export interface FTPLoaderUserConfigItem {
   url: string
   path: string
   uploadPath: string
@@ -91,7 +91,7 @@ export interface IFtpLoaderUserConfigItem {
   password?: string
 }
 
-export interface IFtpLoaderPathInfo {
+export interface FTPLoaderPathInfo {
   path: string
   uploadPath: string
 }

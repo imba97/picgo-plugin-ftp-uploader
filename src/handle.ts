@@ -1,11 +1,11 @@
 import type { IPicGo } from 'picgo'
-import type { IFtpLoaderUserConfig } from './config'
+import type { FTPLoaderUserConfig } from './config'
 import { getFtpConfig } from './config'
 import { useFtpUploader } from './ftp'
 import { useUploader } from './upload'
 
 export async function handle(ctx: IPicGo) {
-  const userConfig: IFtpLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
+  const userConfig: FTPLoaderUserConfig = ctx.getConfig('picBed.ftp-uploader')
   if (!userConfig) {
     throw new Error('Can\'t find uploader config')
   }
