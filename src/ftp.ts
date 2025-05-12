@@ -1,3 +1,4 @@
+import type { Buffer } from 'node:buffer'
 import Client from 'ftp'
 
 export class FtpUploader {
@@ -41,7 +42,7 @@ export class FtpUploader {
     })
   }
 
-  public async uploadFrom(localPath: string, remotePath: string): Promise<void> {
+  public async uploadFrom(localPath: string | Buffer, remotePath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.client.put(localPath, remotePath, (err) => {
         if (err) {

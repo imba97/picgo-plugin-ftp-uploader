@@ -25,14 +25,19 @@ export async function handle(ctx: IPicGo) {
 
   const input = ctx.input
   const output = ctx.output
-  let filesCount = input.length
+  let filesCount = output.length
 
-  const { upload } = useUploader(ctx, client)
+  const { upload, uploadBuffer } = useUploader(ctx, client)
 
-  for (const i in input) {
+  for (let i = 0; i < input.length; i++) {
     const localPath = input[i]
+    const buffer = output[i].buffer
 
-    await upload(localPath)
+    const uploadPromise = buffer
+      ? uploadBuffer(buffer, i)
+      : upload(localPath, i)
+
+    await uploadPromise
       .then((path) => {
         const imgUrl = `${
           /\/$/.test(config.url)
