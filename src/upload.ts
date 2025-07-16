@@ -25,8 +25,6 @@ export function useUploader(
       ctx.log.error(`FTP ERROR: ${err.message}`)
     })
 
-    ctx.log.info(`fileOrBuffer type: ${fileOrBuffer}`)
-
     await client.uploadFrom(fileOrBuffer, pathInfo.uploadPath)
     return pathInfo.path
   }
